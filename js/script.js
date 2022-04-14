@@ -1,26 +1,41 @@
-let number1;
-let number2;
+const numberButtons = document.querySelectorAll(".number");
+const clear = document.querySelector('.clearDisplay');
+
+numberButtons.forEach((numberButton) =>
+  numberButton.addEventListener("click", (e) => {
+    let display = document.querySelector(".numberDisplay");
+    display.textContent != 0
+      ? (display.textContent += e.target.dataset.value)
+      : (display.textContent = e.target.dataset.value);
+  })
+);
+
+clear.addEventListener('click',()=>{
+  let display = document.querySelector(".numberDisplay");
+  display.textContent = 0;
+})
+
+let numberDisplay = 0;
+let partialResult = 0;
 let operation = null;
 
 function operator(operation, firstNumb, secondNumb) {
-  let result;
   switch (operation) {
     case "+":
-      result = add(firstNumb, secondNumb);
+      add(firstNumb, secondNumb);
       break;
     case "-":
-      result = subtract(firstNumb, secondNumb);
+      subtract(firstNumb, secondNumb);
       break;
     case "*":
-      result = multiply(firstNumb, secondNumb);
+      multiply(firstNumb, secondNumb);
       break;
     case "/":
-      result = divide(firstNumb, secondNumb);
+      divide(firstNumb, secondNumb);
       break;
     default:
       break;
   }
-  return result;
 }
 
 function add(number1, number2) {
@@ -44,4 +59,3 @@ function divide(number1, number2) {
   let num2 = Number(number2);
   return number2 > 0 ? num1 / num2 : "ERROR";
 }
-
