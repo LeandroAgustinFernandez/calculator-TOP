@@ -11,14 +11,7 @@ const operationButtons = document.querySelectorAll(".operator");
 let displayContent = document.querySelector(".numberDisplay");
 
 numberButtons.forEach((numberButton) =>
-  numberButton.addEventListener("click", (e) => {
-    operationState = true;
-    console.log(display);
-    displayContent.textContent != 0 && display != 0
-      ? (display += e.target.dataset.value)
-      : (display = e.target.dataset.value);
-    displayContent.textContent = display;
-  })
+  numberButton.addEventListener("click", getNumber)
 );
 
 clear.addEventListener("click", () => {
@@ -38,21 +31,7 @@ equalButton.addEventListener("click", () => {
 });
 
 operationButtons.forEach((operatorButton) =>
-  operatorButton.addEventListener("click", (e) => {
-    if (!operationState) {
-      operation = e.target.dataset.value; 
-      return;
-    };
-    if (operation != null) {
-      numberDisplay2 = Number(displayContent.textContent);
-      operator(operation, numberDisplay1, numberDisplay2);
-    }
-    operation = e.target.dataset.value;
-    numberDisplay1 = Number(displayContent.textContent);
-    console.log({ numberDisplay1, operation });
-    display = 0;
-    operationState = false;
-  })
+  operatorButton.addEventListener("click", getParamsOperation)
 );
 
 function resetValues() {
@@ -97,11 +76,39 @@ function subtract(number1, number2) {
 function multiply(number1, number2) {
   let num1 = Number(number1);
   let num2 = Number(number2);
-  return Number((num1 * num2).toFixed());
+  return Number((num1 * num2).toFixed(6));
 }
 function divide(number1, number2) {
   let num1 = Number(number1);
   let num2 = Number(number2);
-  let res = Number((num1/num2).toFixed(2))
+  let res = Number((num1 / num2).toFixed(6));
   return number2 > 0 ? res : "ERROR";
+}
+
+function getNumber(e) {
+  if (
+    !displayContent.textContent.includes(".") ||
+    e.target.dataset.value != "."
+  ) {
+    operationState = true;
+    displayContent.textContent != 0 && display != 0
+      ? (display += e.target.dataset.value)
+      : (display = e.target.dataset.value);
+    displayContent.textContent = display;
+  }
+}
+
+function getParamsOperation(e) {
+  if (!operationState) {
+    operation = e.target.dataset.value;
+    return;
+  }
+  if (operation != null) {
+    numberDisplay2 = Number(displayContent.textContent);
+    operator(operation, numberDisplay1, numberDisplay2);
+  }
+  operation = e.target.dataset.value;
+  numberDisplay1 = Number(displayContent.textContent);
+  display = 0;
+  operationState = false;
 }
