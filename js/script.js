@@ -11,7 +11,9 @@ const operationButtons = document.querySelectorAll(".operator");
 let displayContent = document.querySelector(".numberDisplay");
 
 numberButtons.forEach((numberButton) =>
-  numberButton.addEventListener("click", getNumber)
+  numberButton.addEventListener("click", (e)=>{
+    getNumber(e.target.dataset.value)
+  })
 );
 
 clear.addEventListener("click", () => {
@@ -23,15 +25,12 @@ erase.addEventListener("click", () => {
   displayContent.textContent = 0;
 });
 
-equalButton.addEventListener("click", () => {
-  if (operation == null || !operationState) return;
-  numberDisplay2 = Number(displayContent.textContent);
-  operator(operation, numberDisplay1, numberDisplay2);
-  resetValues();
-});
+equalButton.addEventListener("click",calculate);
 
 operationButtons.forEach((operatorButton) =>
-  operatorButton.addEventListener("click", getParamsOperation)
+  operatorButton.addEventListener("click",(e)=>{
+    getParamsOperation(e.target.dataset.value)
+  } )
 );
 
 function resetValues() {
@@ -65,13 +64,13 @@ function operator(operation, firstNumb, secondNumb) {
 function add(number1, number2) {
   let num1 = Number(number1);
   let num2 = Number(number2);
-  let res = num1 + num2;
+  let res = Number((num1 + num2).toFixed(6));
   return res;
 }
 function subtract(number1, number2) {
   let num1 = Number(number1);
   let num2 = Number(number2);
-  return num1 - num2;
+  return Number((num1 - num2).toFixed(6));
 }
 function multiply(number1, number2) {
   let num1 = Number(number1);
@@ -85,30 +84,73 @@ function divide(number1, number2) {
   return number2 > 0 ? res : "ERROR";
 }
 
-function getNumber(e) {
+function getNumber(number) {
   if (
     !displayContent.textContent.includes(".") ||
-    e.target.dataset.value != "."
+    number != "."
   ) {
     operationState = true;
     displayContent.textContent != 0 && display != 0
-      ? (display += e.target.dataset.value)
-      : (display = e.target.dataset.value);
+      ? (display += number)
+      : (display = number);
     displayContent.textContent = display;
   }
 }
 
-function getParamsOperation(e) {
+function getParamsOperation(operationParam) {
   if (!operationState) {
-    operation = e.target.dataset.value;
+    operation = operationParam;
     return;
   }
   if (operation != null) {
     numberDisplay2 = Number(displayContent.textContent);
     operator(operation, numberDisplay1, numberDisplay2);
   }
-  operation = e.target.dataset.value;
+  operation = operationParam;
   numberDisplay1 = Number(displayContent.textContent);
   display = 0;
   operationState = false;
+}
+
+function  calculate() {
+  if (operation == null || !operationState) return;
+  numberDisplay2 = Number(displayContent.textContent);
+  operator(operation, numberDisplay1, numberDisplay2);
+  resetValues();
+}
+
+document.addEventListener('keypress',(e)=>{
+  let codeKey = e.keyCode
+  keyBoardOperations(codeKey) 
+})
+
+function keyBoardOperations(codeKey) {
+  if ((codeKey >= 48 && codeKey <= 57) || codeKey == 46) {
+    let arrayButtons = [...numberButtons];
+    arrayButtons.forEach(element => {
+      if (codeKey == element.dataset.keycode) {        
+        getNumber(element.dataset.value)
+        return;
+      }
+    });
+  }
+  if ((codeKey >= 42 && codeKey <= 45) || codeKey == 47) {
+    let arrayOperationButtons = [...operationButtons];
+    arrayOperationButtons.forEach(element => {
+      if (codeKey == element.dataset.keycode) {
+        getParamsOperation(element.dataset.value)
+        return;
+      }
+    }) 
+  }
+  if (codeKey == 13) {
+    calculate();
+  }
+  if (codeKey == 100) {
+    displayContent.textContent = 0;
+  }
+  if (codeKey == 99) {
+    displayContent.textContent = 0;
+    resetValues();
+  }
 }
