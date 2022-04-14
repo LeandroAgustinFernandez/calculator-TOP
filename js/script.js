@@ -4,7 +4,8 @@ let display = 0;
 let operation = null;
 let operationState = false;
 const numberButtons = document.querySelectorAll(".number");
-const clear = document.querySelector(".clearDisplay");
+const clear = document.querySelector(".clearAll");
+const erase = document.querySelector(".eraseDisplay");
 const equalButton = document.querySelector(".calculate");
 const operationButtons = document.querySelectorAll(".operator");
 let displayContent = document.querySelector(".numberDisplay");
@@ -23,6 +24,10 @@ numberButtons.forEach((numberButton) =>
 clear.addEventListener("click", () => {
   displayContent.textContent = 0;
   resetValues();
+});
+
+erase.addEventListener("click", () => {
+  displayContent.textContent = 0;
 });
 
 equalButton.addEventListener("click", () => {
@@ -92,7 +97,7 @@ function subtract(number1, number2) {
 function multiply(number1, number2) {
   let num1 = Number(number1);
   let num2 = Number(number2);
-  return num1 * num2;
+  return Number((num1 * num2).toFixed());
 }
 function divide(number1, number2) {
   let num1 = Number(number1);
